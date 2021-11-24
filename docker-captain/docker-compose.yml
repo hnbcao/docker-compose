@@ -1,0 +1,24 @@
+version: "2"
+services:
+  dind:
+    image: docker:20.10.8-dind
+    container_name: dind
+    privileged: true
+    env_file:
+      - dind.env
+    volumes:
+      - ./config/daemon.json:/etc/docker/daemon.json
+    restart: always
+  captain:
+    container_name: captain
+    image: hub.d.cisdigital.cn/library/docker-captain
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./static:/opt/captain/static
+    env_file:
+      - captain.env
+    depends_on:
+      - dind
+
+

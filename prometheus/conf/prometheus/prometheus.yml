@@ -1,0 +1,48 @@
+# 全局配置
+global:
+  # scrape_interval: 数据收集频率，默认1分钟（1m）
+  scrape_interval: 1m
+  # scrape_timeout: 数据收集请求超时时间，默认10秒（10s）
+  scrape_timeout: 10s
+  # evaluation_interval: 告警规则触发频率，默认1分钟（1m），与altermanager关联。
+  evaluation_interval: 10s
+  # external_labels: 与外部系统通信时添加到任何时间序列或警报的标签，比如有一个altermanager同时接收多个Prometheus的告警信息，我们可以通过在消息数据中附加external_labels来区分告警消息来自于那个服务。
+  external_labels: 
+    monitor: prometheus
+  # PromQL查询日志文件
+  query_log_file: 
+# 规则文件指定了一个globs列表,从所有匹配的文件中读取规则和警报.
+rule_files:
+  - /etc/config/recording_rules.yml
+  - /etc/config/alerting_rules.yml
+  - /etc/config/rules
+  - /etc/config/alerts
+
+scrape_configs:
+  # Make Prometheus scrape itself for metrics.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # - job_name: 'pushgateway'
+  #   static_configs:
+  #     - targets: ['pushgateway:9091']
+  
+  # - job_name: 'kafka'
+  #   metrics_path: '/metrics'    
+  #   static_configs:
+  #   - targets: ['10.73.13.53:7071','10.73.13.54:7071','10.73.13.55:7071']
+
+  - job_name: 'kafka'
+    metrics_path: '/metrics'    
+    static_configs:
+    - targets: ['10.75.20.212:8089']
+
+  # - job_name: 'debezium'
+  #   metrics_path: '/metrics'    
+  #   static_configs:
+  #   - targets: ['10.73.13.51:7072']
+  - job_name: 'debezium'
+    metrics_path: '/metrics'    
+    static_configs:
+    - targets: ['10.75.20.212:8088']
